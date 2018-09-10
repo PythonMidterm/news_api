@@ -27,8 +27,7 @@ requires = [
     'zope.sqlalchemy',
     'waitress',
     'watson_developer_cloud',  # Custom
-    'time',  # Custom
-    'goose'  # Custom
+    'goose3'  # Custom
 
 ]
 
