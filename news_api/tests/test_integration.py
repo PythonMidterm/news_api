@@ -54,31 +54,10 @@ def test_preferences_lookup(testapp):
     assert response.status_code == 201
 
 
-# def test_invalid_lookup_methods(testapp):
-#     """
-#     """
-#     response = testapp.put('/api/v1/lookup/98109', status='4**')
-#     assert response.status_code == 405
-#     response = testapp.delete('/api/v1/lookup/98109', status='4**')
-#     assert response.status_code == 405
-#     response = testapp.post('/api/v1/lookup/98109', status='4**')
-#     assert response.status_code == 405
-
-
-# def test_create_location(testapp):
-#     """
-#     """
-#     account = {
-#         'email': 'test@example.com',
-#         'password': 'hello',
-#     }
-
-#     token = testapp.post('/api/v1/auth/login', json.dumps(account)).json['token']
-
-#     location = {
-#         'name': 'Seattle',
-#         'zip_code': 98109
-#     }
-#     testapp.authorization = ('Bearer', token)
-#     response = testapp.post('/api/v1/location', json.dumps(location))
-#     assert response.status_code == 201
+def test_invalid_preferences_lookup_methods(testapp):
+    """ Tests that user can't do put or delete to preferences lookup route
+    """
+    response = testapp.put('/api/v1/preferences/', status='4**')
+    assert response.status_code == 405
+    response = testapp.delete('/api/v1/preferences/', status='4**')
+    assert response.status_code == 405
