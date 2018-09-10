@@ -1,15 +1,36 @@
-# midterm_server
+# Intellinewz API
 
-We haven't came up with a concrete idea yet, we know we'd like to do an ALEXA skill though.
+An API with exposed endpoints to filter a newsfeed based on a user's preference for dominate tones calculated based on tone analysis.
 
-Technologies required: Python3, Amazon Echo, TBD
+## Technologies required
+- Python3
+- News API
+- Goose Text Extractor
+- IMB Watson Tone Analyzer
+
+## Getting Started
 
 # Particapants:
-- Malicious Maddy 
 - Luther Mckeiver
 - Ben Hurst
+- Madeline Peters
 - Roman Kireev
 
-## Contributions:
-- https://www.amazon.com
-- https://aws.amazon.com/
+## Contributions
+-
+
+## Routes
+### Home
+/
+
+### Auth
+api/v1/auth/{auth}
+
+### Preferences
+api/v1/preferences
+
+### Feed
+api/v1/feed
+
+## Wireframe
+![Wireframe ](/news_api/assets/wireframe.png)
