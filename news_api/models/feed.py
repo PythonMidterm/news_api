@@ -25,7 +25,7 @@ class Feed(Base):
         if request.dbsession is None:
             raise DBAPIError
 
-        # Research SQLAlchemy logic for grabbing everything from a table.
+        # TODO: Research SQLAlchemy logic for grabbing everything from a table.
         return request.dbsession.query(cls).filter(
             cls.symbol == kwargs['symbol']).one_or_none()
 

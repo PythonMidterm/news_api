@@ -3,6 +3,7 @@ from cryptacular import bcrypt
 from datetime import datetime as dt
 from .meta import Base
 from .role import AccountRole
+from .preferences import Preferences
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import relationship
 from sqlalchemy import (
@@ -24,15 +25,16 @@ class Account(Base):
     id = Column(Integer, primary_key=True)
     email = Column(String(255), nullable=False, unique=True)
     password = Column(Text, nullable=False)
-    preferences = Column(Text, nullable=False)  # Possibly add default preferences here
+    preferences = relationship(Preferences, back_populates='accounts')
     roles = relationship(AccountRole, secondary=roles_association, back_populates='accounts')
+
     date_created = Column(DateTime, default=dt.now())
     date_updated = Column(DateTime, default=dt.now(), onupdate=dt.now())
 
-    def __init__(self, email, password=None, preferences=None):
+    def __init__(self, email, password=None):
         self.email = email
         self.password = manager.encode(password, 10)
-        self.preferences = preferences
+        # self.preferences = preferences
 
     @classmethod
     def new(cls, request, email=None, password=None):

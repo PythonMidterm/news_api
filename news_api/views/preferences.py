@@ -6,9 +6,11 @@ import json
 
 
 class PreferencesAPIView(APIViewSet):
+    # Research SQLAlchemy put method. Otherwise, we may need to delete preferences first and then repopulate.
     def create(self, request, preferences_id=None):
         """Post method to create new preferences. We need conditional logic to check if authenticated user.
         """
+
         try:
             kwargs = json.loads(request.body)
         except json.JSONDecodeError as e:
@@ -23,10 +25,11 @@ class PreferencesAPIView(APIViewSet):
             try:
                 Account.updatePreferences(request, **kwargs)
             except IntegrityError:
+                return
                 # This is the case where they submit preferences that are the same as the old ones. Don't throw an error, just do nothing.
 
 
-        else:
+        # else:
             # NOTE: For MVP, we're requiring registration prior to using site. Below comments don't apply yet
             # If not an authenticated user, call the feed get method, but without storing preferences in the database. That is, call feed endpoint from this endpoint.
             # ORRRR, figure out how to cache guest preferences on the server-side. One option is to create a temporary user to keep the logic/flow consistent, but the challenge would be to figure out how to remove them when they leave the page.
@@ -37,6 +40,3 @@ class PreferencesAPIView(APIViewSet):
         # data = schema.dump(portfolio).data
 
         # return Response(json=data, status=201)
-
-
-

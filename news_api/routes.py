@@ -12,5 +12,5 @@ def includeme(config):
 
     router = ViewSetRouter(config)
     router.register('api/v1/auth/{auth}', AuthAPIView, 'auth')
-    router.register('api/v1/preferences', PreferencesAPIView)
+    router.register('api/v1/preferences', PreferencesAPIView, 'preferences')
     router.register('api/v1/feed', FeedAPIView, 'feed')
