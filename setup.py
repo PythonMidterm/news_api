@@ -21,10 +21,15 @@ requires = [
     'pyramid-restful-framework',  # Custom
     'pyramid_tm',
     'requests',  # Custom
+    'schedule',
     'SQLAlchemy',
     'transaction',
     'zope.sqlalchemy',
     'waitress',
+    'watson_developer_cloud',  # Custom
+    'time',  # Custom
+    'goose'  # Custom
+
 ]
 
 tests_require = [

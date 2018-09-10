@@ -33,7 +33,7 @@ class PreferencesAPIView(APIViewSet):
             schema = PreferencesSchema()
             data = schema.dump(preferences).data
 
-        return Response(json=data, status=201)
+            return Response(json=data, status=201)
 
 
         # else:
