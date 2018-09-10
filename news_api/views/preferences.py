@@ -1,4 +1,5 @@
 from ..models import Account, Preferences
+from ..models.schemas import PreferencesSchema
 from sqlalchemy.exc import IntegrityError, DataError
 from pyramid_restful.viewsets import APIViewSet
 from pyramid.response import Response
@@ -24,11 +25,15 @@ class PreferencesAPIView(APIViewSet):
 
             try:
                 print('HERE ARE THE KWARGS FROM PREFERENCE VIEW:', kwargs)
-                Preferences.new(request, **kwargs)
+                preferences = Preferences.new(request, **kwargs)
             except IntegrityError:
                 # This is the case where they submit preferences that are the same as the old ones. Keeping for now, but maybe don't throw an error, just do nothing.
                 return Response(json='Duplicate Key Error. Portfolio already exists.', status=409)
 
+            schema = PreferencesSchema()
+            data = schema.dump(preferences).data
+
+        return Response(json=data, status=201)
 
 
         # else:
