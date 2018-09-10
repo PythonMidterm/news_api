@@ -5,6 +5,20 @@ name = "pypi"
 
 [packages]
 news-api = {editable = true, path = ".", extras = ["testing"]}
+pyramid-restful-framework = "*"
+requests = "*"
+waitress = "*"
+pyramid-jwt = "*"
+cryptacular = "*"
+pandas = "*"
+bokeh = "*"
+numpy = "*"
+sklearn = "*"
+scipy = "*"
+matplotlib = "*"
+schedule = "*"
+watson-developer-cloud = "*"
+"goose3" = "*"
 
 [dev-packages]
 

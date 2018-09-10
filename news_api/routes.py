@@ -1,3 +1,16 @@
+from pyramid_restful.routers import ViewSetRouter
+from .views.feed import FeedAPIView
+from .views.preferences import PreferencesAPIView
+from .views.auth import AuthAPIView
+
+
 def includeme(config):
+    """Route adding and configuration
+    """
     config.add_static_view('static', 'static', cache_max_age=3600)
-    config.add_route('home', '/')
+    config.add_route('home', '/')  # TODO: Go into default.py and change homeview.
+
+    router = ViewSetRouter(config)
+    router.register('api/v1/auth/{auth}', AuthAPIView, 'auth')
+    router.register('api/v1/preferences', PreferencesAPIView)
+    router.register('api/v1/feed', FeedAPIView, 'feed')

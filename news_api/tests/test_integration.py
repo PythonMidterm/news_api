@@ -1,7 +1,8 @@
+import requests
 import unittest
+from pyramid import testing
 import transaction
 
-from pyramid import testing
 
 
 def dummy_request(dbsession):
@@ -11,7 +12,7 @@ def dummy_request(dbsession):
 class BaseTest(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp(settings={
-            'sqlalchemy.url': 'sqlite:///:memory:'
+            'sqlalchemy.url': 'postgres://localhost:5432/weather_test'
         })
         self.config.include('.models')
         settings = self.config.get_settings()
@@ -37,29 +38,3 @@ class BaseTest(unittest.TestCase):
         testing.tearDown()
         transaction.abort()
         Base.metadata.drop_all(self.engine)
-
-
-class TestMyViewSuccessCondition(BaseTest):
-
-    def setUp(self):
-        super(TestMyViewSuccessCondition, self).setUp()
-        self.init_database()
-
-        from .models import MyModel
-
-        model = MyModel(name='one', value=55)
-        self.session.add(model)
-
-    def test_passing_view(self):
-        from .views.default import my_view
-        info = my_view(dummy_request(self.session))
-        self.assertEqual(info['one'].name, 'one')
-        self.assertEqual(info['project'], 'news_api')
-
-
-class TestMyViewFailureCondition(BaseTest):
-
-    def test_failing_view(self):
-        from .views.default import my_view
-        info = my_view(dummy_request(self.session))
-        self.assertEqual(info.status_int, 500)
