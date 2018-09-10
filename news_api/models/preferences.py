@@ -16,7 +16,7 @@ from .meta import Base
 class Preferences(Base):
     __tablename__ = 'preferences'
     id = Column(Integer, primary_key=True)
-    preferences = Column(Text)
+    preference_order = Column(Text)
     date_created = Column(DateTime, default=dt.now())
     date_updated = Column(DateTime, default=dt.now(), onupdate=dt.now())
     account_id = Column(Integer, ForeignKey('accounts.id'), nullable=False)
@@ -24,15 +24,15 @@ class Preferences(Base):
 
     @classmethod
     def new(cls, request, **kwargs):
-        """Method to create new portfolio in database
+        """Method to create new user preferences in database
         """
         if request.dbsession is None:
             raise DBAPIError
-        portfolio = cls(**kwargs)
-        request.dbsession.add(portfolio)
+        preferences = cls(**kwargs)
+        request.dbsession.add(preferences)
 
         return request.dbsession.query(cls).filter(
-            cls.name == kwargs['name']).one_or_none()
+            cls.preferences == kwargs['preference_order']).one_or_none()
 
     @classmethod
     def one(cls, request=None, pk=None):

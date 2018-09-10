@@ -9,6 +9,7 @@ import zope.sqlalchemy
 from .feed import Feed
 from .role import AccountRole
 from .account import Account
+from .preferences import Preferences
 from .associations import roles_association
 # from .mymodel import MyModel  # flake8: noqa
 
