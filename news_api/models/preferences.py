@@ -32,21 +32,5 @@ class Preferences(Base):
         request.dbsession.add(preferences)
 
         return request.dbsession.query(cls).filter(
-            cls.preferences == kwargs['preference_order']).one_or_none()
+            cls.preference_order == kwargs['preference_order']).one_or_none()
 
-    @classmethod
-    def one(cls, request=None, pk=None):
-        """Method to retrieve a portfolio by primary key
-        """
-        if request.dbsession is None:
-            raise DBAPIError
-        return request.dbsession.query(cls).get(pk)
-
-    @classmethod
-    def oneByKwarg(cls, request=None, kwarg=None):
-        """Method to retrieve a portfolio by a single kwarg
-        """
-        if request.dbsession is None:
-            raise DBAPIError
-        return request.dbsession.query(cls).filter(
-            cls.account_id == kwarg).one_or_none()
