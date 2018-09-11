@@ -27,8 +27,7 @@ requires = [
     'zope.sqlalchemy',
     'waitress',
     'watson_developer_cloud',  # Custom
-    'goose3'  # Custom
-
+    'goose3',  # Custom
 ]
 
 tests_require = [
