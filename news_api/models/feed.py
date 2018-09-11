@@ -24,13 +24,6 @@ class Feed(Base):
         self.url = url
         self.dom_tone = dom_tone
 
-    @classmethod
-    def new(cls, title=None, url=None, dom_tone=None):
-        if not request.dbsession:
-            raise DBAPIError
-
-        article = cls(title, url, dom_tone)
-        request.dbsession.add(article)
 
     @classmethod
     def get_all(cls, request):
@@ -40,10 +33,5 @@ class Feed(Base):
             raise DBAPIError
 
         # TODO: Research SQLAlchemy logic for grabbing everything from a table.
+        print('LOOOK HERE', request.dbsession.query(cls).all())
         return request.dbsession.query(cls).all()
-
-    @classmethod
-    def delete_all(cls):
-        if not request.dbsession:
-            raise DBAPIError
-        return request.dbsession.query(cls).delete()
