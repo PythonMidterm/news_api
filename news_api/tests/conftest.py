@@ -67,6 +67,8 @@ def testapp(request):
             db_session.add(model)
 
     def tear_down():
+        """ Tears down the app after testing
+        """
         Base.metadata.drop_all(bind=engine)
 
     request.addfinalizer(tear_down)
