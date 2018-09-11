@@ -39,8 +39,8 @@ def main(global_config, **settings):
     config.include('.models')
     config.include('.routes')
     config.scan()
-    schedule.every(1).minute.do(job)
-    while True:
-        schedule.run_pending()
+#     schedule.every(1).minute.do(job)
+#     while True:
+#         schedule.run_pending()
         
     return config.make_wsgi_app()
