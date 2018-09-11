@@ -46,6 +46,7 @@ def test_good_login(testapp):
     assert response.json['token']
 
 
+""" Looks for password and doen't find one"""
 # def test_bad_login(testapp):
 #     """ Tests bad login returns 400
 #     """
@@ -73,6 +74,9 @@ def test_preferences_post_auth(testapp):
     assert response.status_code == 201
 
 
+"""Not auth not working"""
+
+""" Shouldn't let you do this, but gives 201 """
 # def test_preferences_post_not_auth(testapp):
 #     """ Test cannot post preferences without auth
 #     """
@@ -83,11 +87,18 @@ def test_preferences_post_auth(testapp):
 #     assert response.status_code == 400
 
 
-def test_prefs_rtn_integrity_error_if_already_in_db():
-    """ Test if authenticated, that if you try to update prefs, but they're
-    the same, throws integrity error
-    """
-    pass
+""" Multiple results found, also a bit of an odd thing to rtn to user"""
+# def test_prefs_rtn_integrity_error_if_already_in_db(testapp):
+#     """ Test if authenticated, that if you try to update prefs, but they're
+#     the same, throws integrity error
+#     """
+#     preference_order = {
+#         'preference_order': 'test@example.com',
+#     }
+#     global token
+#     testapp.authorization = ('Bearer', token)
+#     response = testapp.post('/api/v1/preferences/', json.dumps(preference_order))
+#     assert response.status_code == 201
 
 
 def test_get_prefs_auth():
@@ -109,13 +120,16 @@ def test_invalid_preferences_lookup_methods(testapp):
     assert response.status_code == 405
     response = testapp.delete('/api/v1/preferences/', status='4**')
     assert response.status_code == 405
+    response = testapp.post('/api/v1/preferences/', status='4**')
+    assert response.status_code == 400
 
 
 """ Feed tests- api/v1/feed """
 
 
 def test_get_feed_auth():
-    """ Tests authorized user can get feed
+    """ Tests authorized user can get feed, make sure response has
+    something particular on it
     """
     pass
 
@@ -129,6 +143,13 @@ def test_get_feed_not_auth():
 def test_default_prefs_auth():
     """ Tests default user prefs work when none given
     """
+    pass
+
+
+def test_default_prefs_not_auth():
+    """ Tests default user prefs don't work when none given and not auth
+    """
+    pass
 
 
 def test_invalid_feed_lookup_methods(testapp):
@@ -140,20 +161,3 @@ def test_invalid_feed_lookup_methods(testapp):
     assert response.status_code == 405
     response = testapp.post('/api/v1/feed/', status='4**')
     assert response.status_code == 405
-
-
-# def test_get_from_db(testapp):
-#     """ Tests new user registration returns a 201 status code
-#     """
-#     account = {
-#         'email': 'test@example.com',
-#         'password': 'hello',
-#     }
-
-#     response = testapp.post('/api/v1/auth/register/', json.dumps(account))
-#     global token
-#     token = response.json['token']
-#     assert response.status_code == 201
-#     assert response.json['token']
-#     response = testapp.get('/api/v1/auth/profile/')
-    # assert response has the correct data in it
