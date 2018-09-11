@@ -42,7 +42,8 @@ class AuthAPIView(APIViewSet):
                             roles=[role.name for role in authenticated.roles],
                             userName=authenticated.email
                         )
-                    }
+                    },
+                    status=201
                 )
 
             return Response(json='Not Authorized', status=401)
