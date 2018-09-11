@@ -30,7 +30,8 @@ def testapp(request):
         """ Function that returns a Pyramid WSGI app with included settings
         """
         settings = {
-            'sqlalchemy.url': 'postgresql://localhost:5432/news_test'
+            'sqlalchemy.url': 'postgresql://localhost:5432/news_test',
+            # 'sqlalchemy.url': 'postgres://roman:password@localhost:5432/news_test',
         }
         # news_test is a postgres db set up to be used to run these tests
 
@@ -67,6 +68,8 @@ def testapp(request):
             db_session.add(model)
 
     def tear_down():
+        """ Tears down the app after testing
+        """
         Base.metadata.drop_all(bind=engine)
 
     request.addfinalizer(tear_down)
