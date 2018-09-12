@@ -9,7 +9,7 @@ class AuthAPIView(APIViewSet):
     def create(self, request, auth=None):
         """POST method to api/v1/auth endpoint. Currently, no database setup.
         """
-        data = json.loads(request.body)
+        data = json.loads(request.body.decode())
         if auth == 'register':
             # TODO: Pull in Preferences model and add default preferences after account is created.
             try:
