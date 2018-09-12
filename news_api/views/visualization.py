@@ -9,7 +9,6 @@ class VisualizationAPIViewset(APIViewSet):
     def list(self, request):
         """Ping database and send back list of all news articles in archives
         """
-        # import pdb; pdb.set_trace()
         try:
             archives_sql = Archives.get_all(request)
         except (DataError, AttributeError):
