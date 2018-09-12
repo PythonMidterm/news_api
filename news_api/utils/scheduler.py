@@ -97,12 +97,12 @@ def job():
 
             print(article)
             try:
-                article_to_insert = Feed(title=article['title'], url=article['url'], dom_tone=article['dom_tone'])
+                article_to_insert = Feed(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
                 article_to_insert_archive = Archives(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
                 session.add(article_to_insert)
                 session.add(article_to_insert_archive)
 
-            except TypeError:
+            except(TypeError, KeyError):
                 continue
 
     session.commit()

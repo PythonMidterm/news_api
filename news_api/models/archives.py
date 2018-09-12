@@ -12,7 +12,7 @@ from .meta import Base
 class Archives(Base):
     __tablename__ = 'archives'
     id = Column(Integer, primary_key=True)
-    title = Column(Text)
+    title = Column(Text, unique=True)
     description = Column(Text)
     source = Column(Text)
     date_published = Column(Text)
