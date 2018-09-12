@@ -10,6 +10,7 @@ from .meta import Base
 
 
 class Feed(Base):
+    # TODO: Expand table attributes and __init__ properties to include description, source, data published, etc.
     __tablename__ = 'feed'
     id = Column(Integer, primary_key=True)
     title = Column(Text)
@@ -25,25 +26,10 @@ class Feed(Base):
         self.dom_tone = dom_tone
 
     @classmethod
-    def new(cls, title=None, url=None, dom_tone=None):
-        if not request.dbsession:
-            raise DBAPIError
-
-        article = cls(title, url, dom_tone)
-        request.dbsession.add(article)
-
-    @classmethod
     def get_all(cls, request):
         """Method to retrieve feed from database
         """
         if request.dbsession is None:
             raise DBAPIError
 
-        # TODO: Research SQLAlchemy logic for grabbing everything from a table.
         return request.dbsession.query(cls).all()
-
-    @classmethod
-    def delete_all(cls):
-        if not request.dbsession:
-            raise DBAPIError
-        return request.dbsession.query(cls).delete()

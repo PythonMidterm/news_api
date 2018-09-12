@@ -8,7 +8,6 @@ from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import relationship
 from sqlalchemy import (
     Column,
-    Index,
     Integer,
     Text,
     String,
@@ -16,8 +15,6 @@ from sqlalchemy import (
 )
 
 manager = bcrypt.BCRYPTPasswordManager()
-
-# Prior to adding preferences, stringify json. After retreiving, parse.
 
 
 class Account(Base):
@@ -46,8 +43,6 @@ class Account(Base):
         user = cls(email, password)
         request.dbsession.add(user)
 
-        # TODO: Assign roles to new user
-        # This is unsafe!!!!
         admin_role = request.dbsession.query(AccountRole).filter(
             AccountRole.name == 'admin').one_or_none()
 
