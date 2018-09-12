@@ -74,6 +74,9 @@ response.status_code == 4**
 ~~~~
 response.status_code == 4**
 ~~~~
+**Visuals:** `api/v1/visuals`
+* GET: See visual representations of the data in our article archives.
+
 **Authorization:**
 * `api/v1/auth/{auth}`
 * `api/v1/register`

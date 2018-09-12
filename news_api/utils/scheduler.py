@@ -9,6 +9,7 @@ import goose3
 import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import IntegrityError
 
 
 def connect_to_db(db_path):
@@ -59,14 +60,14 @@ def analyze_text(text):
 
 
 def job():
-    """Job to be scheduled for 3-step News Fetch/Extraction/Analyze. 
-    We can trigger at a specified interval (24-hour for demo purposes. 
+    """Job to be scheduled for 3-step News Fetch/Extraction/Analyze.
+    We can trigger at a specified interval (24-hour for demo purposes.
     1-hr or less in true production)
     """
 
-    # db_path = 'postgres://localhost:5432/news_api'
+    db_path = 'postgres://localhost:5432/news_api'
 
-    db_path = 'postgres://roman:password@localhost:5432/news_api'
+    # db_path = 'postgres://roman:password@localhost:5432/news_api'
 
     session = connect_to_db(db_path)
 
@@ -120,9 +121,14 @@ def job():
                 article_to_insert = Feed(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
                 article_to_insert_archive = Archives(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
                 session.add(article_to_insert)
-                session.add(article_to_insert_archive)
+                exists = session.query(
+                    session.query(Archives).filter_by(title=article['title']).exists()).scalar()
+                if not exists:
+                    session.add(article_to_insert_archive)
+                else:
+                    continue
 
             except TypeError:
                 continue
 
-    session.commit()
+        session.commit()
