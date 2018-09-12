@@ -1,6 +1,6 @@
 from marshmallow_sqlalchemy import ModelSchema
 from marshmallow_sqlalchemy.fields import fields
-from . import Feed, Account, AccountRole, Preferences
+from . import Feed, Account, AccountRole, Preferences, Archives
 
 
 class AccountRoleSchema(ModelSchema):
@@ -23,3 +23,8 @@ class PreferencesSchema(ModelSchema):
 class FeedSchema(ModelSchema):
     class Meta:
         model = Feed
+
+
+class ArchivesSchema(ModelSchema):
+    class Meta:
+        model = Archives
