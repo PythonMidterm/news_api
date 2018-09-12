@@ -6,8 +6,6 @@ from ..models import Account
 from sqlalchemy.exc import IntegrityError, DataError
 from pyramid_restful.viewsets import APIViewSet
 from pyramid.response import Response
-import requests
-import json
 
 
 class FeedAPIView(APIViewSet):
@@ -17,12 +15,10 @@ class FeedAPIView(APIViewSet):
 
         if request.authenticated_userid:
             account = Account.one(request, request.authenticated_userid)
-            preferences = Preferences.oneByKwarg(request, account.id)
+            preferences = Preferences.one_by_account_id(request, account.id)
 
         schema = PreferencesSchema()
         preference_order = schema.dump(preferences).data['preference_order']
-
-        print('HERE ARE THE PREFS', preference_order)
 
         try:
             feed_sql = Feed.get_all(request)
@@ -47,11 +43,6 @@ class FeedAPIView(APIViewSet):
                 feed_sorted[pref] = feed_parsed[pref]
             except KeyError:
                 continue
-
-
-
-
-        print('THE FEEEED', feed_sorted)
 
 
         return Response(json={'feed': feed_sorted}, status=200)

@@ -36,8 +36,9 @@ class Preferences(Base):
         return request.dbsession.query(cls).filter(
             cls.preference_order == kwargs['preference_order']).one_or_none()
 
+
     @classmethod
-    def oneByKwarg(cls, request=None, kwarg=None):
+    def one_by_account_id(cls, request=None, kwarg=None):
         """Method to retrieve user preferences by a single kwarg
         """
         if request.dbsession is None:

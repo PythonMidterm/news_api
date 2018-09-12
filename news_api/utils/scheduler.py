@@ -64,8 +64,7 @@ def job():
     db_path = 'postgres://localhost:5432/news_api'
     session = connect_to_db(db_path)
 
-    # Delete current feed.
-    # Consider archiving instead while will provide more data to analyze (per source)
+    # TODO: Archive data before deleting. In a for loop, retrieve each row from the feed table, then post to the archive table.
     session.query(Feed).delete()
     session.commit()
 
@@ -73,6 +72,7 @@ def job():
 
     parsed_article_list = []
 
+    # TODO: Expand parsed_article below to include description, source, data published, etc.
     for obj in api_response:
         parsed_article = {'title': obj['title'], 'url': obj['url']}
         parsed_article_list.append(parsed_article)
@@ -103,6 +103,3 @@ def job():
                 continue
 
     session.commit()
-
-    print(analyzed_articles)
-
