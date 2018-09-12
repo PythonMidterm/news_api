@@ -12,5 +12,7 @@ def includeme(config):
 
     router = ViewSetRouter(config)
     router.register('api/v1/auth/{auth}', AuthAPIView, 'auth')
+    # TODO: Add in permissions for preferences.
     router.register('api/v1/preferences', PreferencesAPIView, 'preferences')
+    # TODO: Add in permissions for feed.
     router.register('api/v1/feed', FeedAPIView, 'feed')

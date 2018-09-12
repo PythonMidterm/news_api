@@ -14,9 +14,11 @@ class AccountSchema(ModelSchema):
     class Meta:
         model = Account
 
+
 class PreferencesSchema(ModelSchema):
     class Meta:
         model = Preferences
+
 
 class FeedSchema(ModelSchema):
     class Meta:

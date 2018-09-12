@@ -11,6 +11,7 @@ class AuthAPIView(APIViewSet):
         """
         data = json.loads(request.body)
         if auth == 'register':
+            # TODO: Pull in Preferences model and add default preferences after account is created.
             try:
                 user = Account.new(
                     request,
@@ -19,7 +20,6 @@ class AuthAPIView(APIViewSet):
             except (IntegrityError, KeyError):
                 return Response(json='Bad Request', status=400)
 
-            # TODO: Refactor to use JWT
             return Response(
                 json_body={
                     'token': request.create_jwt_token(
@@ -49,8 +49,3 @@ class AuthAPIView(APIViewSet):
             return Response(json='Not Authorized', status=401)
 
         return Response(json='Not Found', status=404)
-        # my_database_is_a_variable = request.body
-        # username = json.loads(my_database_is_a_variable)['username']
-        # message = 'Created a record for {}!'.format(username)
-        # return Response(json={'message': message}, status=201)
-
