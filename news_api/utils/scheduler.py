@@ -64,7 +64,10 @@ def job():
     1-hr or less in true production)
     """
 
-    db_path = 'postgres://localhost:5432/news_api'
+    # db_path = 'postgres://localhost:5432/news_api'
+
+    db_path = 'postgres://roman:password@localhost:5432/news_api'
+
     session = connect_to_db(db_path)
 
     # TODO: Archive data before deleting. In a for loop, retrieve each row from the feed table, then post to the archive table.
@@ -104,10 +107,10 @@ def job():
             article = {
                 'title': article['title'],
                 'url': article['url'],
-                'description': article['desctiption'],
+                'description': article['description'],
                 'source': article['source'],
-                'date_published': article['publishedAt'],
-                'image': article['urlToImage'],
+                'date_published': article['date_published'],
+                'image': article['image'],
                 'dom_tone': dom_tone
                 }
             analyzed_articles.append(article)
