@@ -19,6 +19,7 @@ matplotlib = "*"
 schedule = "*"
 watson-developer-cloud = "*"
 "goose3" = "*"
+jupyter = "*"
 
 [dev-packages]
 

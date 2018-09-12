@@ -34,7 +34,7 @@ class FeedAPIView(APIViewSet):
                 feed_parsed[el['dom_tone'].lower()].append({'title': el['title'], 'url': el['url']})
             except KeyError:
                 feed_parsed[el['dom_tone'].lower()] = [{'title': el['title'], 'url': el['url']}]
-
+        print(feed_parsed)
         feed_sorted = {}
 
         # import pdb; pdb.set_trace()
