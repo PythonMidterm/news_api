@@ -22,11 +22,13 @@ class Archives(Base):
     date_created = Column(DateTime, default=dt.now())
     date_updated = Column(DateTime, default=dt.now(), onupdate=dt.now())
 
-    def __init__(self, title=None, description=None, url=None, dom_tone=None):
+    def __init__(self, title=None, description=None, source=None, date_published=None, url=None, dom_tone=None, image=None):
         self.title = title
         self.description = description
+        self.source = source
         self.url = url
         self.dom_tone = dom_tone
+        self.image = image
 
     @classmethod
     def get_all(cls, request):
