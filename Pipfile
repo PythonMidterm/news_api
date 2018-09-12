@@ -9,7 +9,7 @@ pyramid-restful-framework = "*"
 requests = "*"
 waitress = "*"
 pyramid-jwt = "*"
-cryptacular = "*"
+cryptacular = {editable = true, ref = "cb96fb3", hg = "https://bitbucket.org/dholth/cryptacular"}
 pandas = "*"
 bokeh = "*"
 numpy = "*"
