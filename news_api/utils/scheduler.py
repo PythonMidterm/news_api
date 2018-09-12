@@ -59,10 +59,15 @@ def analyze_text(text):
 
 
 def job():
-    """Job to be scheduled for 3-step News Fetch/Extraction/Analyze. We can trigger at a specified interval (24-hour for demo purposes. 1-hr or less in true production)
+    """Job to be scheduled for 3-step News Fetch/Extraction/Analyze. 
+    We can trigger at a specified interval (24-hour for demo purposes. 
+    1-hr or less in true production)
     """
 
-    db_path = 'postgres://localhost:5432/news_api'
+    # db_path = 'postgres://localhost:5432/news_api'
+
+    db_path = 'postgres://roman:password@localhost:5432/news_api'
+
     session = connect_to_db(db_path)
 
     # TODO: Archive data before deleting. In a for loop, retrieve each row from the feed table, then post to the archive table.
@@ -75,7 +80,14 @@ def job():
 
     # TODO: Expand parsed_article below to include description, source, data published, etc.
     for obj in api_response:
-        parsed_article = {'title': obj['title'], 'url': obj['url']}
+        parsed_article = {
+            'title': obj['title'],
+            'url': obj['url'],
+            'description': obj['description'],
+            'source': obj['source']['name'],
+            'date_published': obj['publishedAt'],
+            'image': obj['urlToImage'],
+            }
         parsed_article_list.append(parsed_article)
 
     analyzed_articles = []
@@ -92,12 +104,20 @@ def job():
 
         if len(tone_analysis['document_tone']['tones']):
             dom_tone = tone_analysis['document_tone']['tones'][-1]['tone_name']
-            article = {'title': article['title'], 'url': article['url'], 'dom_tone': dom_tone}
+            article = {
+                'title': article['title'],
+                'url': article['url'],
+                'description': article['description'],
+                'source': article['source'],
+                'date_published': article['date_published'],
+                'image': article['image'],
+                'dom_tone': dom_tone
+                }
             analyzed_articles.append(article)
 
             print(article)
             try:
-                article_to_insert = Feed(title=article['title'], url=article['url'], dom_tone=article['dom_tone'])
+                article_to_insert = Feed(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
                 article_to_insert_archive = Archives(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
                 session.add(article_to_insert)
                 session.add(article_to_insert_archive)
