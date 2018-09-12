@@ -33,5 +33,5 @@ class PreferencesAPIView(APIViewSet):
 
             return Response(json=data, status=201)
 
-    # TODO: (GET api/v1/preferences) Write retrieve method to get user's preferences from database. Follow logic of first "if" conditional in views/feed.py list method.
+    # TODO: (GET api/v1/preferences) Write retrieve method to get user's preferences from database. Follow logic of first "if" conditional in views/.py list method.
 

@@ -2,6 +2,7 @@ from pyramid_restful.routers import ViewSetRouter
 from .views.feed import FeedAPIView
 from .views.preferences import PreferencesAPIView
 from .views.auth import AuthAPIView
+from .views.visualization import VisualizationAPIViewset
 
 
 def includeme(config):
@@ -16,3 +17,4 @@ def includeme(config):
     router.register('api/v1/preferences', PreferencesAPIView, 'preferences')
     # TODO: Add in permissions for feed.
     router.register('api/v1/feed', FeedAPIView, 'feed')
+    router.register('api/v1/visuals', VisualizationAPIViewset, 'visuals')
