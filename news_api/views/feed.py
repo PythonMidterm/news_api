@@ -20,7 +20,7 @@ class FeedAPIView(APIViewSet):
             preferences = Preferences.oneByKwarg(request, account.id)
 
         schema = PreferencesSchema()
-        preference_order = json.loads(schema.dump(preferences).data['preference_order'])
+        preference_order = schema.dump(preferences).data['preference_order']
 
         print('HERE ARE THE PREFS', preference_order)
 
@@ -35,14 +35,18 @@ class FeedAPIView(APIViewSet):
             schema = FeedSchema()
             el = schema.dump(article).data
             try:
-                feed_parsed[el['dom_tone']].append({'title': el['title'], 'url': el['url']})
+                feed_parsed[el['dom_tone'].lower()].append({'title': el['title'], 'url': el['url']})
             except KeyError:
-                feed_parsed[el['dom_tone']] = [{'title': el['title'], 'url': el['url']}]
+                feed_parsed[el['dom_tone'].lower()] = [{'title': el['title'], 'url': el['url']}]
 
         feed_sorted = {}
 
+        # import pdb; pdb.set_trace()
         for pref in preference_order:
-            feed_sorted[pref] = feed_parsed[pref]
+            try:
+                feed_sorted[pref] = feed_parsed[pref]
+            except KeyError:
+                continue
 
 
 
@@ -50,4 +54,4 @@ class FeedAPIView(APIViewSet):
         print('THE FEEEED', feed_sorted)
 
 
-        return Response(json={'feed': feed_parsed}, status=200)
+        return Response(json={'feed': feed_sorted}, status=200)

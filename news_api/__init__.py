@@ -1,6 +1,9 @@
 from pyramid.config import Configurator
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Allow, ALL_PERMISSIONS
+from .utils.scheduler import job
+import schedule
+import time
 
 
 class RootACL:
@@ -34,14 +37,10 @@ def main(global_config, **settings):
 
     config.include('.models')
     config.include('.routes')
-    config.include('.utils')
+    # config.include('.utils')
     config.scan()
-<<<<<<< HEAD
+    # schedule.every(1).minute.do(job)
+    # while True:
+    #     schedule.run_pending()
 
-=======
-#     schedule.every(1).minute.do(job)
-#     while True:
-#         schedule.run_pending()
-        
->>>>>>> 145932c28d2ab65eb9f9e3467c31bd60234991ee
     return config.make_wsgi_app()

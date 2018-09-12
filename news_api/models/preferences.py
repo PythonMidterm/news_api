@@ -5,10 +5,10 @@ from sqlalchemy import (
     Column,
     Integer,
     Text,
-    JSON,
     DateTime,
 )
 from sqlalchemy import ForeignKey
+from sqlalchemy import ARRAY
 
 from .meta import Base
 
@@ -17,7 +17,7 @@ from .meta import Base
 class Preferences(Base):
     __tablename__ = 'preferences'
     id = Column(Integer, primary_key=True)
-    preference_order = Column(JSON)
+    preference_order = Column(ARRAY(Text))
     date_created = Column(DateTime, default=dt.now())
     date_updated = Column(DateTime, default=dt.now(), onupdate=dt.now())
     account_id = Column(Integer, ForeignKey('accounts.id'), nullable=False)

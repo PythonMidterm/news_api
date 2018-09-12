@@ -13,9 +13,14 @@ class PreferencesAPIView(APIViewSet):
         """
 
         try:
+
+            # {'account_id':2, 'preference_order':'[]'}
             kwargs = json.loads(request.body)
+            kwargs['preference_order'] = json.loads(request.body.decode())['preference_order']
         except json.JSONDecodeError as e:
             return Response(json=e.msg, status=400)
+
+        {}
 
         # NOTE: below comment only applicable if we have separate preferences table.
         # What are we doing here? We're checking if the user is authenticated. If so, get the account and add it to the kwargs (this will become the foreign key to the corresponding account on the Portfolio table).
@@ -23,7 +28,9 @@ class PreferencesAPIView(APIViewSet):
             account = Account.one(request, request.authenticated_userid)
             kwargs['account_id'] = account.id
 
+
             try:
+                # import pdb; pdb.set_trace()
                 print('HERE ARE THE KWARGS FROM PREFERENCE VIEW:', kwargs)
                 preferences = Preferences.new(request, **kwargs)
             except IntegrityError:

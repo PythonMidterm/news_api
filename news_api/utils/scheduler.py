@@ -41,7 +41,7 @@ def extract_text(url):
     try:
         article = g.extract(url)
     except goose3.network.NetworkError:
-        pass
+        return False
 
     return article.cleaned_text
 
@@ -83,6 +83,8 @@ def job():
         url = article['url']
 
         text = extract_text(url)
+        if not text:
+            continue
 
         # Need to refactor everything below to fit into this function. And maybe another one for inserting into the database.
         tone_analysis = analyze_text(text)
