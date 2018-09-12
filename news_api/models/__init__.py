@@ -11,6 +11,7 @@ from .role import AccountRole
 from .account import Account
 from .preferences import Preferences
 from .associations import roles_association
+from .archives import Archives
 # from .mymodel import MyModel  # flake8: noqa
 
 # run configure_mappers after defining all of the models to ensure
