@@ -9,8 +9,8 @@ from sqlalchemy import (
 from .meta import Base
 
 
-class Feed(Base):
-    __tablename__ = 'feed'
+class Archives(Base):
+    __tablename__ = 'archives'
     id = Column(Integer, primary_key=True)
     title = Column(Text)
     description = Column(Text)
@@ -32,7 +32,7 @@ class Feed(Base):
 
     @classmethod
     def get_all(cls, request):
-        """Method to retrieve feed from database
+        """Method to retrieve archive from database
         """
         if request.dbsession is None:
             raise DBAPIError
