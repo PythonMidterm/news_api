@@ -120,10 +120,13 @@ def job():
             try:
                 article_to_insert = Feed(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
                 article_to_insert_archive = Archives(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
-
                 session.add(article_to_insert)
-                session.add(article_to_insert_archive).on_conflict_do_nothing(
-                    index_elements=['title'])
+                exists = session.query(
+                    session.query(Archives).filter_by(title=article['title']).exists()).scalar()
+                if not exists:
+                    session.add(article_to_insert_archive)
+                else:
+                    continue
 
             except TypeError:
                 continue
