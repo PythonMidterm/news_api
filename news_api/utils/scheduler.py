@@ -29,9 +29,11 @@ def connect_to_db(db_path):
 def get_news():
     """Function that fetches 20 current headlines from the News API
     """
-    apiKey = os.environ['../WATSON_KEY']
-    url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey={}'.format(apiKey)
+    # apiKey = os.environ['../WATSON_KEY']
+    # url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey={}'.format(apiKey)
 
+    # apiKey = os.environ['../WATSON_KEY']
+    url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=62d8cce09c5f447ea8d980720d63b3ef'
     response = requests.get(url)
 
     return response.json()['articles']
@@ -51,13 +53,11 @@ def extract_text(url):
 
 
 def analyze_text(text):
-    """ Sends the cleaned text from goose to the tone analyzer api
-    """
     tone_analyzer = ToneAnalyzerV3(
             version='2017-09-21',
-            username=os.environ['../TONE_USER'],
-            password=os.environ['../TONE_PASSWORD'])
-
+            username='637f0158-041b-45af-99c6-1035adfcb148',
+            password='fooszZRwri2t')
+            
     return tone_analyzer.tone(
             {'text': text},
             'application/json')
