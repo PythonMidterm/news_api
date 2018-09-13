@@ -4,7 +4,7 @@ An API with exposed endpoints to filter a newsfeed based on a user's preference 
 
 ----
 ## AWS Deployment EC2 Instance:
-[http://ec2-34-215-37-227.us-west-2.compute.amazonaws.com/](http://ec2-34-215-37-227.us-west-2.compute.amazonaws.com/)
+[http://ec2-18-223-109-140.us-east-2.compute.amazonaws.com/](http://ec2-18-223-109-140.us-east-2.compute.amazonaws.com/)
 
 ## Github Repository
 [https://github.com/PythonMidterm/news_api](https://github.com/PythonMidterm/news_api)

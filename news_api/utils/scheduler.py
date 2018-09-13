@@ -10,6 +10,8 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
+import os
+from sys import platform
 
 
 def connect_to_db(db_path):
@@ -27,7 +29,7 @@ def connect_to_db(db_path):
 def get_news():
     """Function that fetches 20 current headlines from the News API
     """
-    apiKey = '62d8cce09c5f447ea8d980720d63b3ef'
+    apiKey = os.environ['../WATSON_KEY']
     url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey={}'.format(apiKey)
 
     response = requests.get(url)
@@ -51,8 +53,8 @@ def extract_text(url):
 def analyze_text(text):
     tone_analyzer = ToneAnalyzerV3(
             version='2017-09-21',
-            username='2ae7d431-a7f3-4a6f-861e-33271c09fa08',
-            password='yuEKUQzEVFLm')
+            username=os.environ['../TONE_USER'],
+            password=os.environ['../TONE_PASSWORD'])
 
     return tone_analyzer.tone(
             {'text': text},
@@ -64,10 +66,10 @@ def job():
     We can trigger at a specified interval (24-hour for demo purposes.
     1-hr or less in true production)
     """
-
-    db_path = 'postgres://localhost:5432/news_api'
-
-    # db_path = 'postgres://roman:password@localhost:5432/news_api'
+    if platform == "linux" or platform == "linux2":
+        db_path = 'postgres://roman:password@localhost:5432/news_api'
+    elif platform == "darwin":
+        db_path = 'postgres://localhost:5432/news_api'
 
     session = connect_to_db(db_path)
 
