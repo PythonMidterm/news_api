@@ -2,6 +2,7 @@ from pyramid_restful.viewsets import APIViewSet
 from pyramid.response import Response
 from sqlalchemy.exc import IntegrityError
 from ..models import Account
+from ..models import Preferences
 import json
 
 
@@ -19,6 +20,13 @@ class AuthAPIView(APIViewSet):
                     data['password'])
             except (IntegrityError, KeyError):
                 return Response(json='Bad Request', status=400)
+
+            default_preferences = ['analytical', 'tentative', 'joy', 'confident', 'sadness', 'fear', 'anger']
+            kwargs = {}
+            kwargs['preference_order'] = default_preferences
+            print(user)
+            # kwargs['account_id'] = account.id
+
 
             return Response(
                 json_body={

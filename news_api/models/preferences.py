@@ -39,7 +39,7 @@ class Preferences(Base):
 
     @classmethod
     def one_by_account_id(cls, request=None, kwarg=None):
-        """Method to retrieve user preferences by a single kwarg
+        """Method to retrieve user preferences by account id
         """
         if request.dbsession is None:
             raise DBAPIError

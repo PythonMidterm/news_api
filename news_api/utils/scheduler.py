@@ -65,9 +65,9 @@ def job():
     1-hr or less in true production)
     """
 
-    db_path = 'postgres://localhost:5432/news_api'
+    # db_path = 'postgres://localhost:5432/news_api'
 
-    # db_path = 'postgres://roman:password@localhost:5432/news_api'
+    db_path = 'postgres://roman:password@localhost:5432/news_api'
 
     session = connect_to_db(db_path)
 

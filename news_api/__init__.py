@@ -37,8 +37,8 @@ def main(global_config, **settings):
 
     config.include('.models')
     config.include('.routes')
-    # config.include('.utils')
+
     config.scan()
-    schedule.every(30).seconds.do(job)
+    schedule.every(1).hour.do(job)
     schedule.run_continuously()
     return config.make_wsgi_app()
