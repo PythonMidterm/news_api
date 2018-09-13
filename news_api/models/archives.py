@@ -23,6 +23,9 @@ class Archives(Base):
     date_updated = Column(DateTime, default=dt.now(), onupdate=dt.now())
 
     def __init__(self, title=None, description=None, source=None, date_published=None, url=None, dom_tone=None, image=None):
+        """ Initializes the class with the attributes of title, description,
+        source, url, dominant tone, and the related image
+        """
         self.title = title
         self.description = description
         self.source = source
@@ -32,7 +35,7 @@ class Archives(Base):
 
     @classmethod
     def get_all(cls, request):
-        """Method to retrieve archive from database
+        """Method to retrieve all archives from the database
         """
         if request.dbsession is None:
             raise DBAPIError

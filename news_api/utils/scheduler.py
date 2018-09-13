@@ -51,6 +51,8 @@ def extract_text(url):
 
 
 def analyze_text(text):
+    """ Sends the cleaned text from goose to the tone analyzer api
+    """
     tone_analyzer = ToneAnalyzerV3(
             version='2017-09-21',
             username=os.environ['../TONE_USER'],

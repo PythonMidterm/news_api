@@ -9,7 +9,6 @@ class VisualizationAPIViewset(APIViewSet):
     def list(self, request):
         """Ping database and send back list of all news articles in archives
         """
-        # import pdb; pdb.set_trace()
         try:
             archives_sql = Archives.get_all(request)
         except (DataError, AttributeError):
@@ -28,5 +27,4 @@ class VisualizationAPIViewset(APIViewSet):
                 archives_parsed[el['dom_tone'].lower()].append({'title': el['title'], 'url': el['url']})
             except KeyError:
                 archives_parsed[el['dom_tone'].lower()] = [{'title': el['title'], 'url': el['url']}]
-        # print(archives_parsed)
         return Response(json={'archives': archives_parsed}, status=200)

@@ -1,4 +1,3 @@
-# I think he copied from Kat's repo here. Also, musflood on github.
 import pytest
 import transaction
 from ..models.meta import Base
@@ -21,13 +20,17 @@ def testapp(request):
         ]
 
         def __init__(self, request):
+            """ Initializes the class. 
+            """
             pass
 
     def add_role_principals(userid, request):
+        """ returns the roles as an empty list
+        """
         return request.jwt_claims.get('roles', [])
 
     def main():
-        """ Function that returns a Pyramid WSGI app with included settings
+        """ Function that returns a Pyramid WSGI app with included settings.
         """
         settings = {
             'sqlalchemy.url': 'postgresql://localhost:5432/news_test',
@@ -68,7 +71,7 @@ def testapp(request):
             db_session.add(model)
 
     def tear_down():
-        """ Tears down the app after testing
+        """ Tears down the app after testing so the db is empty.
         """
         Base.metadata.drop_all(bind=engine)
 
