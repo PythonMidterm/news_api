@@ -27,5 +27,4 @@ class VisualizationAPIViewset(APIViewSet):
                 archives_parsed[el['dom_tone'].lower()].append({'title': el['title'], 'url': el['url']})
             except KeyError:
                 archives_parsed[el['dom_tone'].lower()] = [{'title': el['title'], 'url': el['url']}]
-        # print(archives_parsed)
         return Response(json={'archives': archives_parsed}, status=200)

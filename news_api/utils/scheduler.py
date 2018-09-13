@@ -9,7 +9,6 @@ import goose3
 import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import IntegrityError
 
 
 def connect_to_db(db_path):
@@ -49,6 +48,8 @@ def extract_text(url):
 
 
 def analyze_text(text):
+    """ Sends the cleaned text from goose to the tone analyzer api
+    """
     tone_analyzer = ToneAnalyzerV3(
             version='2017-09-21',
             username='2ae7d431-a7f3-4a6f-861e-33271c09fa08',
