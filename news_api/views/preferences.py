@@ -8,7 +8,8 @@ import json
 
 class PreferencesAPIView(APIViewSet):
     def create(self, request, preferences_id=None):
-        """Post method to create new preferences. We need conditional logic to check if authenticated user.
+        """Post method to create new preferences. We need conditional logic to 
+        check if authenticated user.
         """
 
         try:

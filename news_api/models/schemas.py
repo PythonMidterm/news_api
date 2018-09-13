@@ -2,6 +2,9 @@ from marshmallow_sqlalchemy import ModelSchema
 from marshmallow_sqlalchemy.fields import fields
 from . import Feed, Account, AccountRole, Preferences, Archives
 
+""" Schemas to connect the models with the views
+"""
+
 
 class AccountRoleSchema(ModelSchema):
     class Meta:

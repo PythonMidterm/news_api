@@ -7,7 +7,7 @@ import json
 
 class AuthAPIView(APIViewSet):
     def create(self, request, auth=None):
-        """POST method to api/v1/auth endpoint. Currently, no database setup.
+        """POST method to api/v1/auth endpoint.
         """
         data = json.loads(request.body)
         if auth == 'register':

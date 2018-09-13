@@ -20,7 +20,7 @@ from ..models import Feed, Account, AccountRole, roles_association
 
 
 def usage(argv):
-    """I don't know what this does.
+    """ Formats a string to print to the user to help them use the app
     """
     cmd = os.path.basename(argv[0])
     print('usage: %s <config_uri> [var=value]\n'

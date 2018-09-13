@@ -37,12 +37,10 @@ class FeedAPIView(APIViewSet):
         print(feed_parsed)
         feed_sorted = {}
 
-        # import pdb; pdb.set_trace()
         for pref in preference_order:
             try:
                 feed_sorted[pref] = feed_parsed[pref]
             except KeyError:
                 continue
-
 
         return Response(json={'feed': feed_sorted}, status=200)

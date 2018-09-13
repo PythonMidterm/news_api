@@ -23,6 +23,9 @@ class Feed(Base):
     date_updated = Column(DateTime, default=dt.now(), onupdate=dt.now())
 
     def __init__(self, title=None, description=None, source=None, date_published=None, url=None, dom_tone=None, image=None):
+        """ Initializes the feed with attributes of title, description, source, 
+        date published, url to the article, dominany tone, and related image
+        """
         self.title = title
         self.description = description
         self.source = source
@@ -32,7 +35,7 @@ class Feed(Base):
 
     @classmethod
     def get_all(cls, request):
-        """Method to retrieve feed from database
+        """Method to retrieve the whole feed from the database
         """
         if request.dbsession is None:
             raise DBAPIError
