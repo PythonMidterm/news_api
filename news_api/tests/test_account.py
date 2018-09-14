@@ -25,3 +25,4 @@ def test_account_with_no_email_throws_error(db_session):
     )
     with pytest.raises(IntegrityError):
         db_session.add(account)
+        assert db_session.query(Account).one_or_none() is None
