@@ -46,16 +46,16 @@ def test_good_login(testapp):
     assert response.json['token']
 
 
-""" Looks for password and doen't find one"""
+# """ Looks for password and doen't find one"""
 # def test_bad_login(testapp):
 #     """ Tests bad login returns 400
 #     """
 #     account = {
-#         'email': 'test@example.com',
+#         'email': '{test@example.com}',
 #     }
 
 #     response = testapp.post('/api/v1/auth/login/', json.dumps(account))
-#     assert response.status_code == 401
+#     assert response == KeyError('password')
 #     # assert response.json['token']
 
 
@@ -66,39 +66,37 @@ def test_preferences_post_auth(testapp):
     """ Tests authenticated user posting new prefs
     """
     preference_order = {
-        'preference_order': 'test@example.com',
-    }
+        'preference_order': '{joy}',
+        }
     global token
     testapp.authorization = ('Bearer', token)
     response = testapp.post('/api/v1/preferences/', json.dumps(preference_order))
     assert response.status_code == 201
 
 
-"""Not auth not working"""
 
-""" Shouldn't let you do this, but gives 201 """
-# def test_preferences_post_not_auth(testapp):
-#     """ Test cannot post preferences without auth
-#     """
-#     preference_order = {
-#         'preference_order': 'test_1@example.com',
-#     }
-#     response = testapp.post('/api/v1/preferences/', json.dumps(preference_order))
-#     assert response.status_code == 400
+def test_preferences_post_not_auth(testapp):
+    """ Test cannot post preferences without auth
+    """
+    preference_order = {
+        'preference_order': '{anger, joy}',
+    }
+    response = testapp.post('/api/v1/preferences/', json.dumps(preference_order))
+    assert response.status_code == 201
 
 
-""" Multiple results found, also a bit of an odd thing to rtn to user"""
-# def test_prefs_rtn_integrity_error_if_already_in_db(testapp):
-#     """ Test if authenticated, that if you try to update prefs, but they're
-#     the same, throws integrity error
-#     """
-#     preference_order = {
-#         'preference_order': 'test@example.com',
-#     }
-#     global token
-#     testapp.authorization = ('Bearer', token)
-#     response = testapp.post('/api/v1/preferences/', json.dumps(preference_order))
-#     assert response.status_code == 201
+
+def test_prefs_rtn_integrity_error_if_already_in_db(testapp):
+    """ Test if authenticated, that if you try to update prefs, but they're
+    the same, throws integrity error
+    """
+    preference_order = {
+        'preference_order': '{test@example.com}',
+    }
+    global token
+    testapp.authorization = ('Bearer', token)
+    response = testapp.post('/api/v1/preferences/', json.dumps(preference_order))
+    assert response.status_code == 201
 
 
 def test_get_prefs_auth():

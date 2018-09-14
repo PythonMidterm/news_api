@@ -13,7 +13,6 @@ from sqlalchemy import ARRAY
 from .meta import Base
 
 
-# Re-factor everything below
 class Preferences(Base):
     __tablename__ = 'preferences'
     id = Column(Integer, primary_key=True)
@@ -24,7 +23,7 @@ class Preferences(Base):
     accounts = relationship('Account', back_populates='preferences')
 
     @classmethod
-    def new(cls, request, **kwargs):
+    def set_default(cls, request, **kwargs):
         """Method to create new user preferences in database
         """
         if request.dbsession is None:
@@ -32,11 +31,26 @@ class Preferences(Base):
         preferences = cls(**kwargs)
 
         request.dbsession.add(preferences)
-
-        # TODO: Modify this to fix multiple results found error
         return request.dbsession.query(cls).filter(
-            cls.preference_order == kwargs['preference_order']).one_or_none()
+            cls.account_id == kwargs['account_id']).one_or_none()
 
+    @classmethod
+    def update_prefs(cls, request, **kwargs):
+        """Method to update user preferences in database by reassigning cls on 
+        the correct account id column to the new preferences on the kwargs 
+        coming in
+        """
+        if request.dbsession is None:
+            raise DBAPIError
+
+        prefs_to_update = request.dbsession.query(cls).filter(
+            cls.account_id == kwargs['account_id']).first()
+
+        prefs_to_update.preference_order = kwargs['preference_order']
+        request.dbsession.flush()
+
+        return request.dbsession.query(cls).filter(
+            cls.account_id == kwargs['account_id']).one_or_none()
 
     @classmethod
     def one_by_account_id(cls, request=None, kwarg=None):
