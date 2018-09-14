@@ -5,8 +5,6 @@ from ..models import Account
 from ..models import Preferences
 from ..models.schemas import AccountSchema
 import json
-from .. models import Preferences
-from ..models.schemas import AccountSchema
 
 
 class AuthAPIView(APIViewSet):
@@ -31,12 +29,7 @@ class AuthAPIView(APIViewSet):
             account = schema.dump(user).data
 
             kwargs['account_id'] = account['id']
-<<<<<<< HEAD
-            Preferences.new(request, **kwargs)
-
-=======
             Preferences.set_default(request, **kwargs)
->>>>>>> cb0ccd4b78f6e53ebb83697edb744a3742e48081
 
             return Response(
                 json_body={

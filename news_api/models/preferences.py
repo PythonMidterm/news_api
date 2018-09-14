@@ -36,10 +36,11 @@ class Preferences(Base):
 
     @classmethod
     def update_prefs(cls, request, **kwargs):
-        """Method to update user preferences in database by reassigning cls on 
-        the correct account id column to the new preferences on the kwargs 
+        """Method to update user preferences in database by reassigning cls on
+        the correct account id column to the new preferences on the kwargs
         coming in
         """
+
         if request.dbsession is None:
             raise DBAPIError
 

@@ -8,12 +8,12 @@ import json
 
 class PreferencesAPIView(APIViewSet):
     def create(self, request, preferences_id=None):
-        """Post method to create new preferences. We need conditional logic to 
+        """Post method to create new preferences. We need conditional logic to
         check if authenticated user.
         """
 
         try:
-            kwargs = json.loads(request.body)
+            kwargs = json.loads(request.body.decode())
             kwargs['preference_order'] = json.loads(request.body.decode())['preference_order']
         except json.JSONDecodeError as e:
             return Response(json=e.msg, status=400)
