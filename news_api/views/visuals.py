@@ -22,12 +22,10 @@ from bokeh.transform import cumsum
 
 
 class VisualizationAPIViewset(APIViewSet):
-    def list(self, request):
-        pass
-
     def retrieve(self, request, id=None):
         """Ping database and send back list of all news articles in archives
         """
+        body = ''
         id = id.lower()
         try:
             archives_sql = Archives.get_all(request)
@@ -68,7 +66,7 @@ class VisualizationAPIViewset(APIViewSet):
             data['angle'] = data['value']/sum(x.values()) * 2*pi
             data['color'] = Category20c[len(x)]
 
-            p = figure(plot_height=350, title=id, toolbar_location=None, tools="hover", tooltips="@dominant_tone: @value")
+            p = figure(plot_height=350, title=id, toolbar_location=None, tools="hover", tooltips="@tone: @value")
 
             p.wedge(x=0, y=1, radius=0.4,
                     start_angle=cumsum('angle', include_zero=True), end_angle=cumsum('angle'),
@@ -88,4 +86,5 @@ class VisualizationAPIViewset(APIViewSet):
                 'r'
             )
             body = f.read()
-            return Response(body=body, status=200)
+
+        return Response(body=body, status=200)

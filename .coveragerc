@@ -4,6 +4,6 @@ omit =
     news_api/test*
     **/**/initializedb.py
     **/**/scheduler.py
-    **/**/visualization.py
+    **/**/visuals.py
     news_api/schedule*
     news_api/

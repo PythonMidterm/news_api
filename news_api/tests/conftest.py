@@ -87,8 +87,8 @@ def test_entry():
         title='Any News',
         url='http://www.cnn.com',
         description='Anything is possible',
-        source='fox news',
-        data_published='any',
+        source='cnn',
+        date_published='any',
         dom_tone='Joy',
         image='any'
     )
