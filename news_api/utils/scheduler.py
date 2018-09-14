@@ -60,10 +60,10 @@ def job():
     We can trigger at a specified interval (24-hour for demo purposes.
     1-hr or less in true production)
     """
-    if platform == "linux" or platform == "linux2":
-        db_path = 'postgresql://benbenbuhben:password@newsapi.ckyulxkbmgtj.us-east-2.rds.amazonaws.com/news_api'
-    elif platform == "darwin":
-        db_path = 'postgres://localhost:5432/news_api'
+    # if platform == "linux" or platform == "linux2":
+    db_path = 'postgresql://benbenbuhben:password@newsapi.ckyulxkbmgtj.us-east-2.rds.amazonaws.com/news_api'
+    # elif platform == "darwin":
+    # db_path = 'postgres://localhost:5432/news_api'
 
     session = connect_to_db(db_path)
 
@@ -111,11 +111,18 @@ def job():
                 }
             analyzed_articles.append(article)
 
-            print(article)
             try:
                 article_to_insert = Feed(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
                 article_to_insert_archive = Archives(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
-                session.add(article_to_insert)
+                article_exists = session.query(
+                    session.query(Feed).filter_by(title=article['title']).exists()).scalar()
+                if not article_exists:
+                    session.add(article_to_insert)
+                else:
+                    session.commit()
+                    continue
+
+
                 exists = session.query(
                     session.query(Archives).filter_by(title=article['title']).exists()).scalar()
                 if not exists:
@@ -128,4 +135,3 @@ def job():
                 continue
 
         session.commit()
-    print('Everything populated!')

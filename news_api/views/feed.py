@@ -12,7 +12,6 @@ class FeedAPIView(APIViewSet):
     def list(self, request):
         """Ping database and send back list of all news articles
         """
-
         if request.authenticated_userid:
             account = Account.one(request, request.authenticated_userid)
             preferences = Preferences.one_by_account_id(request, account.id)
@@ -34,14 +33,15 @@ class FeedAPIView(APIViewSet):
                 feed_parsed[el['dom_tone'].lower()].append({'title': el['title'], 'url': el['url'], 'source': el['source'], 'date_published': el['date_published'], 'description': el['description'], 'image': el['image']})
             except KeyError:
                 feed_parsed[el['dom_tone'].lower()] = [{'title': el['title'], 'url': el['url'], 'source': el['source'], 'date_published': el['date_published'], 'description': el['description'], 'image': el['image']}]
-        print(feed_parsed)
 
-        feed_sorted = {}
+        feed_sorted = []
 
         for pref in preference_order:
             try:
-                feed_sorted[pref] = feed_parsed[pref]
+                tone_category = {}
+                tone_category[pref] = feed_parsed[pref]
+                feed_sorted.append(tone_category)
             except KeyError:
                 continue
 
-        return Response(json={'feed': feed_sorted}, status=200)
+        return Response(json={'feed': feed_sorted}, content_type='application/json', status=200)
