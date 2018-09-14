@@ -111,7 +111,6 @@ def job():
                 }
             analyzed_articles.append(article)
 
-            print(article)
             try:
                 article_to_insert = Feed(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
                 article_to_insert_archive = Archives(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
@@ -123,7 +122,7 @@ def job():
                     session.commit()
                     continue
 
-                session.add(article_to_insert)
+
                 exists = session.query(
                     session.query(Archives).filter_by(title=article['title']).exists()).scalar()
                 if not exists:
@@ -136,4 +135,3 @@ def job():
                 continue
 
         session.commit()
-    print('Everything populated!')

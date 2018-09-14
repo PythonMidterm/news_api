@@ -23,12 +23,11 @@ from bokeh.transform import cumsum
 
 class VisualizationAPIViewset(APIViewSet):
     def list(self, request):
-        print('HIIIII', request)
+        pass
 
     def retrieve(self, request, id=None):
         """Ping database and send back list of all news articles in archives
         """
-        print('anything at all')
         id = id.lower()
         try:
             archives_sql = Archives.get_all(request)
@@ -38,7 +37,6 @@ class VisualizationAPIViewset(APIViewSet):
         for article in archives_sql:
             schema = ArchivesSchema()
             sample_data.append(schema.dump(article).data)
-        print('LOOOOK HERE', sample_data)
 
         parsed_url = request.current_route_url()
         chart_type = urlparse(parsed_url).query.split('=')[1]
