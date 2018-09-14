@@ -8,11 +8,12 @@ import json
 
 class PreferencesAPIView(APIViewSet):
     def create(self, request, preferences_id=None):
-        """Post method to create new preferences. We need conditional logic to check if authenticated user.
+        """Post method to create new preferences. We need conditional logic to
+        check if authenticated user.
         """
 
         try:
-            kwargs = json.loads(request.body)
+            kwargs = json.loads(request.body.decode())
             kwargs['preference_order'] = json.loads(request.body.decode())['preference_order']
         except json.JSONDecodeError as e:
             return Response(json=e.msg, status=400)
@@ -22,8 +23,7 @@ class PreferencesAPIView(APIViewSet):
             kwargs['account_id'] = account.id
 
             try:
-                # import pdb; pdb.set_trace()
-                preferences = Preferences.new(request, **kwargs)
+                preferences = Preferences.update_prefs(request, **kwargs)
             except IntegrityError:
                 # This is the case where they submit preferences that are the same as the old ones. Keeping for now, but maybe don't throw an error, just do nothing.
                 return Response(json='Duplicate Key Error. Portfolio already exists.', status=409)

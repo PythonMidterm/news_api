@@ -31,18 +31,17 @@ class FeedAPIView(APIViewSet):
             schema = FeedSchema()
             el = schema.dump(article).data
             try:
-                feed_parsed[el['dom_tone'].lower()].append({'title': el['title'], 'url': el['url']})
+                feed_parsed[el['dom_tone'].lower()].append({'title': el['title'], 'url': el['url'], 'source': el['source'], 'date_published': el['date_published'], 'description': el['description'], 'image': el['image']})
             except KeyError:
-                feed_parsed[el['dom_tone'].lower()] = [{'title': el['title'], 'url': el['url']}]
+                feed_parsed[el['dom_tone'].lower()] = [{'title': el['title'], 'url': el['url'], 'source': el['source'], 'date_published': el['date_published'], 'description': el['description'], 'image': el['image']}]
         print(feed_parsed)
+
         feed_sorted = {}
 
-        # import pdb; pdb.set_trace()
         for pref in preference_order:
             try:
                 feed_sorted[pref] = feed_parsed[pref]
             except KeyError:
                 continue
-
 
         return Response(json={'feed': feed_sorted}, status=200)

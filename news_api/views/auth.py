@@ -2,16 +2,17 @@ from pyramid_restful.viewsets import APIViewSet
 from pyramid.response import Response
 from sqlalchemy.exc import IntegrityError
 from ..models import Account
+from ..models import Preferences
+from ..models.schemas import AccountSchema
 import json
 
 
 class AuthAPIView(APIViewSet):
     def create(self, request, auth=None):
-        """POST method to api/v1/auth endpoint. Currently, no database setup.
+        """POST method to api/v1/auth endpoint.
         """
         data = json.loads(request.body.decode())
         if auth == 'register':
-            # TODO: Pull in Preferences model and add default preferences after account is created.
             try:
                 user = Account.new(
                     request,
@@ -19,6 +20,16 @@ class AuthAPIView(APIViewSet):
                     data['password'])
             except (IntegrityError, KeyError):
                 return Response(json='Bad Request', status=400)
+
+            default_preferences = ['analytical', 'tentative', 'joy', 'confident', 'sadness', 'fear', 'anger']
+            kwargs = {}
+            kwargs['preference_order'] = default_preferences
+
+            schema = AccountSchema()
+            account = schema.dump(user).data
+
+            kwargs['account_id'] = account['id']
+            Preferences.set_default(request, **kwargs)
 
             return Response(
                 json_body={

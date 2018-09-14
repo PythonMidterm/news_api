@@ -1,15 +1,12 @@
-import schedule
-import time
 from ..models.feed import Feed
 from ..models.archives import Archives
-import json
 from watson_developer_cloud import ToneAnalyzerV3
 from goose3 import Goose
 import goose3
 import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import IntegrityError
+from sys import platform
 
 
 def connect_to_db(db_path):
@@ -27,9 +24,8 @@ def connect_to_db(db_path):
 def get_news():
     """Function that fetches 20 current headlines from the News API
     """
-    apiKey = '62d8cce09c5f447ea8d980720d63b3ef'
-    url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey={}'.format(apiKey)
 
+    url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=62d8cce09c5f447ea8d980720d63b3ef'
     response = requests.get(url)
 
     return response.json()['articles']
@@ -51,8 +47,8 @@ def extract_text(url):
 def analyze_text(text):
     tone_analyzer = ToneAnalyzerV3(
             version='2017-09-21',
-            username='2ae7d431-a7f3-4a6f-861e-33271c09fa08',
-            password='yuEKUQzEVFLm')
+            username='637f0158-041b-45af-99c6-1035adfcb148',
+            password='fooszZRwri2t')
 
     return tone_analyzer.tone(
             {'text': text},
@@ -64,10 +60,10 @@ def job():
     We can trigger at a specified interval (24-hour for demo purposes.
     1-hr or less in true production)
     """
-
-    db_path = 'postgres://localhost:5432/news_api'
-
-    # db_path = 'postgres://roman:password@localhost:5432/news_api'
+    if platform == "linux" or platform == "linux2":
+        db_path = 'postgresql://benbenbuhben:password@newsapi.ckyulxkbmgtj.us-east-2.rds.amazonaws.com/news_api'
+    elif platform == "darwin":
+        db_path = 'postgres://localhost:5432/news_api'
 
     session = connect_to_db(db_path)
 
@@ -100,8 +96,7 @@ def job():
         if not text:
             continue
 
-        # Need to refactor everything below to fit into this function. And maybe another one for inserting into the database.
-        tone_analysis = analyze_text(text)
+        tone_analysis = analyze_text(text).get_result()
 
         if len(tone_analysis['document_tone']['tones']):
             dom_tone = tone_analysis['document_tone']['tones'][-1]['tone_name']
@@ -126,9 +121,11 @@ def job():
                 if not exists:
                     session.add(article_to_insert_archive)
                 else:
+                    session.commit()
                     continue
 
             except TypeError:
                 continue
 
         session.commit()
+    print('Everything populated!')
