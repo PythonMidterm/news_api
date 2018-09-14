@@ -1,53 +1,137 @@
-# This is where the timed code execution goes
-import schedule
-import time
-import json
+from ..models.feed import Feed
+from ..models.archives import Archives
 from watson_developer_cloud import ToneAnalyzerV3
 from goose3 import Goose
+import goose3
 import requests
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sys import platform
+
+
+def connect_to_db(db_path):
+    """This function creates an engine and a session.
+    """
+    my_engine = create_engine(db_path)
+
+    # create a configured "Session" class
+    Session = sessionmaker(bind=my_engine)
+
+    # create a Session
+    return Session()
+
+
+def get_news():
+    """Function that fetches 20 current headlines from the News API
+    """
+
+    url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=62d8cce09c5f447ea8d980720d63b3ef'
+    response = requests.get(url)
+
+    return response.json()['articles']
+
+
+def extract_text(url):
+    """Function to extract text from article
+    """
+    g = Goose()
+
+    try:
+        article = g.extract(url)
+    except goose3.network.NetworkError:
+        return False
+
+    return article.cleaned_text
+
+
+def analyze_text(text):
+    tone_analyzer = ToneAnalyzerV3(
+            version='2017-09-21',
+            username='637f0158-041b-45af-99c6-1035adfcb148',
+            password='fooszZRwri2t')
+
+    return tone_analyzer.tone(
+            {'text': text},
+            'application/json')
 
 
 def job():
-    response = requests.get('https://newsapi.org/v2/top-headlines?country=us&apiKey=62d8cce09c5f447ea8d980720d63b3ef')
+    """Job to be scheduled for 3-step News Fetch/Extraction/Analyze.
+    We can trigger at a specified interval (24-hour for demo purposes.
+    1-hr or less in true production)
+    """
+    # if platform == "linux" or platform == "linux2":
+    db_path = 'postgresql://benbenbuhben:password@newsapi.ckyulxkbmgtj.us-east-2.rds.amazonaws.com/news_api'
+    # elif platform == "darwin":
+    # db_path = 'postgres://localhost:5432/news_api'
 
-    articles_list = response.json()['articles']
+    session = connect_to_db(db_path)
 
-    list_articles = []
+    # TODO: Archive data before deleting. In a for loop, retrieve each row from the feed table, then post to the archive table.
+    session.query(Feed).delete()
+    session.commit()
 
-    for el in articles_list:
-        single_art = {'title': el['title'], 'url': el['url']}
-        list_articles.append(single_art)
+    api_response = get_news()
 
-    analyzed_articles = {}
+    parsed_article_list = []
 
-    for el in list_articles:
-        url = el['url']
-        g = Goose()
-        article = g.extract(url)
+    # TODO: Expand parsed_article below to include description, source, data published, etc.
+    for obj in api_response:
+        parsed_article = {
+            'title': obj['title'],
+            'url': obj['url'],
+            'description': obj['description'],
+            'source': obj['source']['name'],
+            'date_published': obj['publishedAt'],
+            'image': obj['urlToImage'],
+            }
+        parsed_article_list.append(parsed_article)
 
-        tone_analyzer = ToneAnalyzerV3(
-            version='2017-09-21',
-            username='2ae7d431-a7f3-4a6f-861e-33271c09fa08',
-            password='yuEKUQzEVFLm')
+    analyzed_articles = []
 
-        tone_analysis = tone_analyzer.tone(
-            {'text': article.cleaned_text},
-            'application/json')
-        dom_tone = json.dumps(tone_analysis['document_tone']['tones'][-1]['tone_name'])
+    for article in parsed_article_list:
+        url = article['url']
 
-        try:
-            analyzed_articles[dom_tone].append({'title': el['title'], 'url': el['url']})
-        except KeyError:
-            analyzed_articles[dom_tone] = [{'title': el['title'], 'url': el['url']}]
+        text = extract_text(url)
+        if not text:
+            continue
 
-        print(dom_tone)
+        tone_analysis = analyze_text(text).get_result()
 
-    print(analyzed_articles)
+        if len(tone_analysis['document_tone']['tones']):
+            dom_tone = tone_analysis['document_tone']['tones'][-1]['tone_name']
+            article = {
+                'title': article['title'],
+                'url': article['url'],
+                'description': article['description'],
+                'source': article['source'],
+                'date_published': article['date_published'],
+                'image': article['image'],
+                'dom_tone': dom_tone
+                }
+            analyzed_articles.append(article)
+
+            try:
+                article_to_insert = Feed(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
+                article_to_insert_archive = Archives(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
+                article_exists = session.query(
+                    session.query(Feed).filter_by(title=article['title']).exists()).scalar()
+                if not article_exists:
+                    session.add(article_to_insert)
+                else:
+                    session.commit()
+                    continue
 
 
-# schedule.every(1).hour.do(job)
+                exists = session.query(
+                    session.query(Archives).filter_by(title=article['title']).exists()).scalar()
+                if not exists:
+                    session.add(article_to_insert_archive)
+                else:
+                    session.commit()
+                    continue
 
+            except TypeError:
+                continue
 
-# while True:
-#     schedule.run_pending()
-#     time.sleep(1)
+        session.commit()

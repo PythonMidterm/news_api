@@ -2,6 +2,7 @@ from pyramid.config import Configurator
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Allow, ALL_PERMISSIONS
 from .utils.scheduler import job
+from .schedule import schedule
 
 
 class RootACL:
@@ -36,5 +37,6 @@ def main(global_config, **settings):
     config.include('.models')
     config.include('.routes')
     config.scan()
-    # Run scheduler job here??
+    schedule.every(1).hour.do(job)
+    schedule.run_continuously()
     return config.make_wsgi_app()

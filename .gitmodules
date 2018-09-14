@@ -1,0 +1,3 @@
+[submodule "news_api/schedule"]
+	path = news_api/schedule
+	url = https://github.com/mrhwick/schedule.git

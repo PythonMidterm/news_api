@@ -3,11 +3,11 @@ from cryptacular import bcrypt
 from datetime import datetime as dt
 from .meta import Base
 from .role import AccountRole
+from .preferences import Preferences
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import relationship
 from sqlalchemy import (
     Column,
-    Index,
     Integer,
     Text,
     String,
@@ -16,27 +16,28 @@ from sqlalchemy import (
 
 manager = bcrypt.BCRYPTPasswordManager()
 
-# Prior to adding preferences, stringify json. After retreiving, parse.
-
 
 class Account(Base):
     __tablename__ = 'accounts'
     id = Column(Integer, primary_key=True)
     email = Column(String(255), nullable=False, unique=True)
     password = Column(Text, nullable=False)
-    preferences = Column(Text, nullable=False)  # Possibly add default preferences here
+    preferences = relationship(Preferences, back_populates='accounts')
     roles = relationship(AccountRole, secondary=roles_association, back_populates='accounts')
+
     date_created = Column(DateTime, default=dt.now())
     date_updated = Column(DateTime, default=dt.now(), onupdate=dt.now())
 
-    def __init__(self, email, password=None, preferences=None):
+    def __init__(self, email, password=None):
+        """ Initializes the class with email and password attributes
+        """
         self.email = email
         self.password = manager.encode(password, 10)
-        self.preferences = preferences
 
     @classmethod
     def new(cls, request, email=None, password=None):
-        """Register a new user
+        """Register a new user, filters the user by role and returns the row 
+        filtered by email
         """
         if not request.dbsession:
             raise DBAPIError
@@ -44,8 +45,6 @@ class Account(Base):
         user = cls(email, password)
         request.dbsession.add(user)
 
-        # TODO: Assign roles to new user
-        # This is unsafe!!!!
         admin_role = request.dbsession.query(AccountRole).filter(
             AccountRole.name == 'admin').one_or_none()
 
@@ -57,17 +56,15 @@ class Account(Base):
 
     @classmethod
     def one(cls, request, email=None):
+        """ Get one user from the db, filtered by a unique email
+        """
         return request.dbsession.query(cls).filter(
             cls.email == email).one_or_none()
 
     @classmethod
-    def get_prefs(cls, request, email=None):
-        return request.dbsession.query(cls).filter(
-            cls.preferences == preferences).one_or_none()
-
-    @classmethod
     def check_credentials(cls, request, email, password):
-        """Validate that user exists and they are who they say they are
+        """Validate that user exists and they are who they say they are, if 
+        sucessful, returns row filtered by email, if not, returns None
         """
         if request.dbsession is None:
             raise DBAPIError

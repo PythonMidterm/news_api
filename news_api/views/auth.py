@@ -2,14 +2,16 @@ from pyramid_restful.viewsets import APIViewSet
 from pyramid.response import Response
 from sqlalchemy.exc import IntegrityError
 from ..models import Account
+from ..models import Preferences
+from ..models.schemas import AccountSchema
 import json
 
 
 class AuthAPIView(APIViewSet):
     def create(self, request, auth=None):
-        """POST method to api/v1/auth endpoint. Currently, no database setup.
+        """POST method to api/v1/auth endpoint.
         """
-        data = json.loads(request.body)
+        data = json.loads(request.body.decode())
         if auth == 'register':
             try:
                 user = Account.new(
@@ -19,7 +21,16 @@ class AuthAPIView(APIViewSet):
             except (IntegrityError, KeyError):
                 return Response(json='Bad Request', status=400)
 
-            # TODO: Refactor to use JWT
+            default_preferences = ['analytical', 'tentative', 'joy', 'confident', 'sadness', 'fear', 'anger']
+            kwargs = {}
+            kwargs['preference_order'] = default_preferences
+
+            schema = AccountSchema()
+            account = schema.dump(user).data
+
+            kwargs['account_id'] = account['id']
+            Preferences.set_default(request, **kwargs)
+
             return Response(
                 json_body={
                     'token': request.create_jwt_token(
@@ -42,14 +53,10 @@ class AuthAPIView(APIViewSet):
                             roles=[role.name for role in authenticated.roles],
                             userName=authenticated.email
                         )
-                    }
+                    },
+                    status=201
                 )
 
             return Response(json='Not Authorized', status=401)
 
         return Response(json='Not Found', status=404)
-        # my_database_is_a_variable = request.body
-        # username = json.loads(my_database_is_a_variable)['username']
-        # message = 'Created a record for {}!'.format(username)
-        # return Response(json={'message': message}, status=201)
-

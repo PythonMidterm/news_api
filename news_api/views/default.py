@@ -8,5 +8,5 @@ from textwrap import dedent
 def home_view(request):
     """Get method to hit the root route.
     """
-    message = dedent('\nGET / - the base API route\nPOST /api/v1/auth/ - for registering a new account and signing up\nGET /api/v1/portfolio/{id}/ - for retrieving a user\'s portfolio\nPOST /api/v1/stock/ - for creating a new company record\nGET /api/v1/stock/{id}/ - for retrieving a companies information\nDELETE /api/v1/stock/{id} - for deleting a company record\nGET /api/v1/company/{symbol} - for retrieving company detail from 3rd party API, where {symbol} is variable')
+    message = dedent('\nGET / - the base API route\nPOST /api/v1/auth/{auth} - for registering a new account and signing up\nPOST /api/v1/preferences/ - for modifying default tone order preferences\nGET /api/v1/feed/ - for listing the news feed according to the user preferences\nGET /api/v1/visuals/{source}/ - Retrieve a data visualization for a specified news outlet. Takes query in form of ?type=pie\n')
     return Response(body=message, status=200)

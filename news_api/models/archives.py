@@ -9,10 +9,10 @@ from sqlalchemy import (
 from .meta import Base
 
 
-class Feed(Base):
-    __tablename__ = 'feed'
+class Archives(Base):
+    __tablename__ = 'archives'
     id = Column(Integer, primary_key=True)
-    title = Column(Text)
+    title = Column(Text, unique=True)
     description = Column(Text)
     source = Column(Text)
     date_published = Column(Text)
@@ -23,8 +23,8 @@ class Feed(Base):
     date_updated = Column(DateTime, default=dt.now(), onupdate=dt.now())
 
     def __init__(self, title=None, description=None, source=None, date_published=None, url=None, dom_tone=None, image=None):
-        """ Initializes the feed with attributes of title, description, source,
-        date published, url to the article, dominany tone, and related image
+        """ Initializes the class with the attributes of title, description,
+        source, url, dominant tone, and the related image
         """
         self.title = title
         self.description = description
@@ -36,7 +36,7 @@ class Feed(Base):
 
     @classmethod
     def get_all(cls, request):
-        """Method to retrieve the whole feed from the database
+        """Method to retrieve all archives from the database
         """
         if request.dbsession is None:
             raise DBAPIError

@@ -9,7 +9,9 @@ import zope.sqlalchemy
 from .feed import Feed
 from .role import AccountRole
 from .account import Account
+from .preferences import Preferences
 from .associations import roles_association
+from .archives import Archives
 # from .mymodel import MyModel  # flake8: noqa
 
 # run configure_mappers after defining all of the models to ensure
@@ -18,10 +20,14 @@ configure_mappers()
 
 
 def get_engine(settings, prefix='sqlalchemy.'):
+    """ Helps form the sqlalchemy connection to the db
+    """
     return engine_from_config(settings, prefix)
 
 
 def get_session_factory(engine):
+    """ Churns out session instances
+    """
     factory = sessionmaker()
     factory.configure(bind=engine)
     return factory
