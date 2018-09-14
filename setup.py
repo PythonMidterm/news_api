@@ -21,6 +21,10 @@ requires = [
     'pyramid-restful-framework',  # Custom
     'pyramid_tm',
     'requests',  # Custom
+    'pandas',  # Custom
+    'numpy',  # Custom
+    'bokeh',  # Custom
+    'jupyter',  # Custom
     'schedule',
     'SQLAlchemy',
     'transaction',

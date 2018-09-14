@@ -82,11 +82,11 @@ class VisualizationAPIViewset(APIViewSet):
 
             bk.save(
                 p,
-                f'./news_api/static/pie_{id}.html',
-                title=f'source_versus_tone_{id}'
+                './news_api/static/pie_{}.html'.format(id),
+                title='source_versus_tone_{}'.format(id)
             )
             f = codecs.open(
-                f'./news_api/static/pie_{id}.html',
+                './news_api/static/pie_{}.html'.format(id),
                 'r'
             )
             body = f.read()
