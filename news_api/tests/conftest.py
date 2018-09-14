@@ -33,8 +33,8 @@ def testapp(request):
         """ Function that returns a Pyramid WSGI app with included settings
         """
         settings = {
-            # 'sqlalchemy.url': 'postgresql://localhost:5432/news_test',
-            'sqlalchemy.url': 'postgres://roman:password@localhost:5432/news_test',
+            'sqlalchemy.url': 'postgresql://localhost:5432/news_test',
+            # 'sqlalchemy.url': 'postgres://roman:password@localhost:5432/news_test',
         }
         # news_test is a postgres db set up to be used to run these tests
 
@@ -101,12 +101,14 @@ def test_account():
         email='any_name@gmail.com'
     )
 
+
 @pytest.fixture
 def configuration(request):
     """Setup a database for testing purposes."""
     config = testing.setUp(settings={
+        'sqlalchemy.url': 'postgres://localhost:5432/news_test'
+        # 'sqlalchemy.url': 'postgres://roman:password@localhost:5432/news_test'
 
-        'sqlalchemy.url': 'postgres://roman:password@localhost:5432/news_test'
       
     })
     config.include('news_api.models')
