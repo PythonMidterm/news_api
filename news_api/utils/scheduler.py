@@ -69,7 +69,7 @@ def job():
     1-hr or less in true production)
     """
     if platform == "linux" or platform == "linux2":
-        db_path = 'postgres://roman:password@localhost:5432/news_api'
+        db_path = 'postgres://:password@localhost:5432/news_api'
     elif platform == "darwin":
         db_path = 'postgres://localhost:5432/news_api'
 
