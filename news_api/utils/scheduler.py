@@ -104,8 +104,7 @@ def job():
         if not text:
             continue
 
-        # Need to refactor everything below to fit into this function. And maybe another one for inserting into the database.
-        tone_analysis = analyze_text(text)
+        tone_analysis = analyze_text(text).get_result()
 
         if len(tone_analysis['document_tone']['tones']):
             dom_tone = tone_analysis['document_tone']['tones'][-1]['tone_name']

@@ -30,6 +30,7 @@ class Preferences(Base):
         if request.dbsession is None:
             raise DBAPIError
         preferences = cls(**kwargs)
+
         request.dbsession.add(preferences)
 
         # TODO: Modify this to fix multiple results found error
