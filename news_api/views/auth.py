@@ -3,6 +3,8 @@ from pyramid.response import Response
 from sqlalchemy.exc import IntegrityError
 from ..models import Account
 import json
+from .. models import Preferences
+from ..models.schemas import AccountSchema
 
 
 class AuthAPIView(APIViewSet):
@@ -19,6 +21,16 @@ class AuthAPIView(APIViewSet):
                     data['password'])
             except (IntegrityError, KeyError):
                 return Response(json='Bad Request', status=400)
+
+            default_preferences = ['analytical', 'tentative', 'joy', 'confident', 'sadness', 'fear', 'anger']
+            kwargs = {}
+            kwargs['preference_order'] = default_preferences
+
+            schema = AccountSchema()
+            account = schema.dump(user).data
+
+            kwargs['account_id'] = account['id']
+            Preferences.set_default(request, **kwargs)
 
             return Response(
                 json_body={
