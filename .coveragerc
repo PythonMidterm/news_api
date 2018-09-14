@@ -3,4 +3,7 @@ source = news_api
 omit = 
     news_api/test*
     **/**/initializedb.py
+    **/**/scheduler.py
+    **/**/visualization.py
     news_api/schedule*
+    news_api/
