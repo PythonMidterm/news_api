@@ -1,6 +1,6 @@
 [run]
 source = news_api
-omit = 
+omit =
     news_api/test*
     **/**/initializedb.py
     **/**/scheduler.py

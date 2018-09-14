@@ -81,8 +81,10 @@ def test_preferences_post_not_auth(testapp):
     preference_order = {
         'preference_order': '{anger, joy}',
     }
-    response = testapp.post('/api/v1/preferences/', json.dumps(preference_order))
-    assert response.status_code == 201
+    testapp.authorization = None
+    response = testapp.post('/api/v1/preferences/', json.dumps(preference_order), status=403)
+    print(response)
+    assert response.status_code == 403
 
 
 
@@ -132,10 +134,12 @@ def test_get_feed_auth():
     pass
 
 
-def test_get_feed_not_auth():
+def test_get_feed_not_auth(testapp):
     """ Tests unauthorized user cannot get feed
     """
-    pass
+    testapp.authorization = None
+    response = testapp.get('/api/v1/feed/', status='4**')
+    assert response.status_code == 403
 
 
 def test_default_prefs_auth():
@@ -153,6 +157,8 @@ def test_default_prefs_not_auth():
 def test_invalid_feed_lookup_methods(testapp):
     """ Tests you cannot delete or post to the feed
     """
+    global token
+    testapp.authorization = ('Bearer', token)
     response = testapp.put('/api/v1/feed/', status='4**')
     assert response.status_code == 405
     response = testapp.delete('/api/v1/feed/', status='4**')
