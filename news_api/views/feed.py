@@ -44,4 +44,4 @@ class FeedAPIView(APIViewSet):
             except KeyError:
                 continue
 
-        return Response(json={'feed': feed_sorted}, status=200)
+        return Response(json={'feed': feed_sorted}, status=200, headerlist=[('Access-Control-Allow-Origin', 'http://localhost:8080'), ('Content-Type', 'application/json')])
